@@ -13,7 +13,8 @@ export const HeaderStyles = (theme: Theme) => createStyles({
             transition: theme.transitions.create('all', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.short
-            })
+            }),
+            minHeight: 0
         },
         background: 'none'
     },

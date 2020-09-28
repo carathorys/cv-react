@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, IconButton, ListItem, Toolbar, Typography, withStyles } from '@material-ui/core';
+import { AppBar, IconButton, ListItem, Tab, Tabs, Toolbar, Typography, withStyles } from '@material-ui/core';
 import { HeaderProps } from './header.props';
 import { Brightness3 as Dark, Brightness7 as Bright } from '@material-ui/icons';
 import { HeaderStyles } from './header.styles';
@@ -12,7 +12,8 @@ const topTreshold = 65;
 export class Header extends React.PureComponent<HeaderProps, HeaderState> {
   state = {
     scrolled: false,
-    background: ''
+    background: '',
+    selectedTab: 0
   }
 
   constructor(props: HeaderProps) {
@@ -41,6 +42,11 @@ export class Header extends React.PureComponent<HeaderProps, HeaderState> {
       this.setState({ scrolled: evt.target.scrollingElement.scrollTop > topTreshold })
   }
 
+
+  handleTabChange(_: any, value: any) {
+    this.setState({ ...this.state, selectedTab: value });
+  }
+
   render() {
     const { classes, toggleDarkMode, darkMode, title, background } = this.props;
 
@@ -51,7 +57,14 @@ export class Header extends React.PureComponent<HeaderProps, HeaderState> {
           <IconButton color="inherit" onClick={toggleDarkMode}>{!darkMode ? <Dark /> : <Bright />}</IconButton>
         </Toolbar>
         <Toolbar className="toobar secondRow">
-          <ListItem>X</ListItem>
+          <Tabs value={this.state.selectedTab} onChange={this.handleTabChange.bind(this)}>
+            <Tab value={0} label="My tab" />
+            <Tab value={1} label="My tab" />
+            <Tab value={2} label="My tab" />
+            <Tab value={3} label="My tab" />
+            <Tab value={4} label="My tab" />
+            <Tab value={5} label="My tab" />
+          </Tabs>
         </Toolbar>
       </div>
     </AppBar>;
