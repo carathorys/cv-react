@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, IconButton, Toolbar, Typography, withStyles } from '@material-ui/core';
+import { AppBar, IconButton, ListItem, Toolbar, Typography, withStyles } from '@material-ui/core';
 import { HeaderProps } from './header.props';
 import { Brightness3 as Dark, Brightness7 as Bright } from '@material-ui/icons';
 import { HeaderStyles } from './header.styles';
@@ -51,6 +51,7 @@ export class Header extends React.PureComponent<HeaderProps, HeaderState> {
           <IconButton color="inherit" onClick={toggleDarkMode}>{!darkMode ? <Dark /> : <Bright />}</IconButton>
         </Toolbar>
         <Toolbar className="toobar secondRow">
+          <ListItem>X</ListItem>
         </Toolbar>
       </div>
     </AppBar>;
