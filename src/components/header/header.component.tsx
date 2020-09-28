@@ -5,35 +5,56 @@ import { Brightness3 as Dark, Brightness7 as Bright } from '@material-ui/icons';
 import { HeaderStyles } from './header.styles';
 import { HeaderState } from './header.state';
 
+import BackgroundImage from 'gatsby-background-image'
+
+const topTreshold = 65;
+
 export class Header extends React.PureComponent<HeaderProps, HeaderState> {
-    state = { scrolled: false }
-    constructor(props: HeaderProps) {
-        super(props);
-    }
+  state = {
+    scrolled: false,
+    background: ''
+  }
 
-    componentDidMount() {
-        document.addEventListener('scroll', this.trackScrolling);
-    }
+  constructor(props: HeaderProps) {
+    super(props);
+  }
 
-    componentWillUnmount() {
-        document.removeEventListener('scroll', this.trackScrolling);
-    }
+  componentDidMount() {
+    document.addEventListener('scroll', this.trackScrolling);
+    this.setState({ ...this.state, background: this.props.background.base64 ?? '' })
+    fetch(this.props.background.src).then(x => x.blob()).then(x => {
+      var fr = new FileReader();
+      fr.readAsDataURL(x);
+      fr.onloadend = () => {
+        this.setState({ ...this.state, background: fr.result?.toString() ?? '' })
+      }
+    });
+  }
 
-    trackScrolling = (evt: any) => {
-        if (this.state.scrolled && (evt.target?.scrollingElement?.scrollTop ?? 1) <= 0
-            || !this.state.scrolled && (evt.target?.scrollingElement?.scrollTop ?? 0) > 0)
-            this.setState({ scrolled: evt.target.scrollingElement.scrollTop > 0 })
-    }
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.trackScrolling);
+  }
 
-    render() {
-        const { classes, toggleDarkMode, darkMode, title } = this.props;
-        return <AppBar className={classes.root}>
-            <Toolbar className={this.state.scrolled ? classes.toolbarScrolled : classes.toolbarTop}>
-                <Typography variant="h6" className={classes.title}>{title}</Typography>
-                <IconButton color="inherit" onClick={toggleDarkMode}>{!darkMode ? <Dark /> : <Bright />}</IconButton>
-            </Toolbar>
-        </AppBar>;
-    }
+  trackScrolling = (evt: any) => {
+    if (this.state.scrolled && (evt.target?.scrollingElement?.scrollTop ?? 1) <= topTreshold
+      || !this.state.scrolled && (evt.target?.scrollingElement?.scrollTop ?? 0) > topTreshold)
+      this.setState({ scrolled: evt.target.scrollingElement.scrollTop > topTreshold })
+  }
+
+  render() {
+    const { classes, toggleDarkMode, darkMode, title, background } = this.props;
+
+    return <AppBar className={this.state.scrolled ? `${classes.root} ${classes.rootScrolled}` : classes.root}>
+      <div className={`${classes.bg} background`} style={{ backgroundImage: `url(${this.state.background})` }}>
+        <Toolbar className="toobar firstRow">
+          <Typography variant="h6" className={classes.title}>{title}</Typography>
+          <IconButton color="inherit" onClick={toggleDarkMode}>{!darkMode ? <Dark /> : <Bright />}</IconButton>
+        </Toolbar>
+        <Toolbar className="toobar secondRow">
+        </Toolbar>
+      </div>
+    </AppBar>;
+  }
 }
 
 
